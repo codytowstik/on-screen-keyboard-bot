@@ -3,6 +3,9 @@ class MapleGenericActions:
     """
     Actions that are non-class specific that can be done within the Maplestory client.
     """
+    def quitGame(self):
+        pass
+
     def login(self):
         pass
 
@@ -25,4 +28,13 @@ class MapleGenericActions:
         pass
 
     def useItem(self):
+        pass
+
+    def lootItems(self):
+        pass
+
+    def addAP(self):
+        pass
+
+    def addSP(self):
         pass
