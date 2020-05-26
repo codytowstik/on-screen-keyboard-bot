@@ -1,0 +1,28 @@
+### .gitignore
+#
+#   Official docs: https://www.atlassian.com/git/tutorials/saving-changes/gitignore
+
+### OS based files
+
+# mac
+.DS_STORE
+
+### IntelliJ IDEA Files
+#
+#   Official docs: https://www.notion.so/codybanks/Set-up-0db72af9f95f4b8f9cee45a09c6b7163#6456513cd63f48e5a2da53a60da13567
+#   Stack Overflow: https://stackoverflow.com/questions/11968531/what-to-gitignore-from-the-idea-folder
+
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/vcs.xml
+.idea/workspace.xml
+
+/out/
+
+# front end things
+/dist/
+/node_modules/
+
+# python
+__pycache__/
+venv/
