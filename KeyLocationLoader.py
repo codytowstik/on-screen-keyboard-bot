@@ -8,13 +8,23 @@ from Typings import KeyLocation, ScreenCoordinate
 from Logger import Logger
 
 
-class Keys:
-    maple_logger = Logger()
-    key_image_base_path = "onscreenkeyboard"
-    script_path = pathlib.Path(__file__).parent.absolute()
-    key_image_full_path = os.path.join(script_path, key_image_base_path)
+class KeyLocationLoader:
+    """
+    Load all of the coordinates of the OSK keys into a dictionary key_locations. Loads from the directory
+    specified in KEY_IMAGE_BASE_PATH. Looks for keys in the region of the OSK by first looking for
+    a match for OSK_FILE_NAME.
+    """
+    KEY_IMAGE_BASE_PATH = "onscreenkeyboard"
+    OSK_FILE_NAME = "onscreenkeyboard.png"
 
+    script_path = pathlib.Path(__file__).parent.absolute()
+    key_image_full_path = os.path.join(script_path, KEY_IMAGE_BASE_PATH)
+
+    # maps the key name to the coordinates of it's location on screen
+    # key name is loaded from the file name minus the extension
     key_locations: KeyLocation = {}
+
+    maple_logger = Logger()
 
     def __init__(self):
         self.maple_logger.info("Initializing keys from path: {0}...", self.key_image_full_path)
@@ -27,7 +37,7 @@ class Keys:
         self.maple_logger.debug("Loaded keys in {0} seconds.", datetime.datetime.now() - now)
 
     def __getKeyboardRegion(self):
-        keyboard_file_path = os.path.join(self.key_image_full_path, "onscreenkeyboard.png")
+        keyboard_file_path = os.path.join(self.key_image_full_path, self.OSK_FILE_NAME)
 
         self.maple_logger.info("Loading keyboard at path: {0}", keyboard_file_path)
 
@@ -73,5 +83,5 @@ class Keys:
 
         return key_location
 
-
-my_keys = Keys()
+    def getKeyLocation(self, key_name: str) -> ScreenCoordinate:
+        return self.key_locations[key_name]
