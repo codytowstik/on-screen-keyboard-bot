@@ -1,4 +1,5 @@
 import time
+import random
 
 from KeyLocationLoader import KeyLocationLoader
 from KeyID import KeyID
@@ -26,4 +27,30 @@ class KeyActions:
         pyautogui.mouseUp()
 
     def tap(self, key_name: KeyID):
+        self.maple_logger.debug("Found key ({0}) at location {1}, tapping.")
+
         self.pressAndHold(key_name, 0)
+
+    def tapSequence(self, *key_names: [KeyID]):
+        for key_name in key_names:
+            self.tap(key_name)
+
+    def sayHello(self):
+        self.tap(KeyID.ENTER)
+        self.tapSequence(KeyID.H, KeyID.I)
+
+    def saySomethingRandom(self):
+        random_value = random.random()
+
+        self.tap(KeyID.ENTER)
+
+        if random_value < 0.3:
+            self.tapSequence(KeyID.H, KeyID.I)
+
+        elif random_value < 0.7:
+            self.tapSequence(KeyID.N, KeyID.O)
+
+        else:
+            self.tapSequence(KeyID.N, KeyID.A, KeyID.H)
+
+        self.tap(KeyID.ENTER)

@@ -10,8 +10,8 @@ maple_logger.info("MapleBot started, welcome!")
 maple_logger.info("Please ensure this program is being 'Run as administrator...'"
                   " so that it can interact with the On Screen Keyboard.")
 
-maple_logger.info("Pausing for 5 seconds")
-time.sleep(3)
+# maple_logger.info("Pausing for 5 seconds")
+# time.sleep(3)
 maple_logger.info(". . . . . . 2 seconds")
 time.sleep(2)
 
@@ -22,3 +22,7 @@ key_actions.pressAndHold(KeyID.O, 1)
 key_actions.pressAndHold(KeyID.DOWN, 0.2)
 key_actions.pressAndHold(KeyID.D, 1)
 key_actions.tap(KeyID.Y)
+
+key_actions.sayHello()
+
+key_actions.saySomethingRandom()
