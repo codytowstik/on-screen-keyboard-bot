@@ -1,11 +1,14 @@
 import logging
 
+
 class Logger:
     # FORMAT = '%(asctime)-15s %(clientip)s %(user)-8s %(message)s'
     FORMAT = '%(asctime)-15s %(message)s'
     logging.basicConfig(format=FORMAT)
 
     logger = logging.getLogger('maple_auto_bot')
+    # Info 20
+    # Debug 10
     logger.setLevel(20)
 
     def debug(self, message: str, *args):

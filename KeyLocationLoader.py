@@ -41,9 +41,12 @@ class KeyLocationLoader:
 
         self.maple_logger.info("Loading keyboard at path: {0}", keyboard_file_path)
 
-        self.keyboard_region = pyautogui.locateOnScreen(keyboard_file_path, confidence=0.9, grayscale=True)
+        self.keyboard_region = pyautogui.locateOnScreen(keyboard_file_path, confidence=0.9)
 
-        self.maple_logger.debug("Found keyboard at region: {0}", self.keyboard_region)
+        if self.keyboard_region is None:
+            self.maple_logger.debug("Unable to find OSK keyboard. Ensure the OSK window is at the smallest size.")
+        else:
+            self.maple_logger.debug("Found keyboard at region: {0}", self.keyboard_region)
 
     def __loadKeys(self):
         """
@@ -57,7 +60,7 @@ class KeyLocationLoader:
         for key_image_file_name in key_image_file_names:
             self.__loadKey(key_image_file_name)
 
-    def __loadKey(self, key_image_file_name: str) -> None:
+    def __loadKey(self, key_image_file_name: str):
         """
         Load key into our key_locations dictionary.
         :param key_image_file_name: the key image file name (should match the file name e.g. ${key_name}.png)
@@ -74,7 +77,7 @@ class KeyLocationLoader:
 
         self.maple_logger.debug("Looking in path {0}", key_file_path)
 
-        key_location = pyautogui.locateOnScreen(key_file_path, region=self.keyboard_region, confidence=0.8)
+        key_location = pyautogui.locateOnScreen(key_file_path, region=self.keyboard_region, confidence=0.9)
 
         if key_location is None:
             self.maple_logger.warning("Unable to find key {0}", key_image_file_name)
