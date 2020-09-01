@@ -45,6 +45,7 @@ class KeyLocationLoader:
 
         if self.keyboard_region is None:
             self.maple_logger.debug("Unable to find OSK keyboard. Ensure the OSK window is at the smallest size.")
+            raise Exception("Unable to find OSK.")
         else:
             self.maple_logger.debug("Found keyboard at region: {0}", self.keyboard_region)
 

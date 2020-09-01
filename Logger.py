@@ -9,7 +9,7 @@ class Logger:
     logger = logging.getLogger('maple_auto_bot')
     # Info 20
     # Debug 10
-    logger.setLevel(20)
+    logger.setLevel(10)
 
     def debug(self, message: str, *args):
         message = self.__format_message(message, *args)
