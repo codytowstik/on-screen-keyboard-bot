@@ -38,3 +38,6 @@ class MapleGenericActions:
 
     def addSP(self):
         pass
+
+    def jump(self):
+        pass
