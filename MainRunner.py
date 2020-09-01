@@ -21,6 +21,8 @@ if user_input == "1":
     automation_tag = input("Choose an automation tag \n")
     action_recorder = ActionRecorder(automation_tag)
 
+    action_recorder.record_action_sequence()
+
 elif user_input == "2":
     pass
 
@@ -43,3 +45,5 @@ else:
 
     key_actions.saySomethingRandom()
 
+
+maple_logger.info("Terminated.")
