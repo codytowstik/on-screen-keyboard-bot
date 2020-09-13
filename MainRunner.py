@@ -1,6 +1,7 @@
 import time
 
 from ActionRecorder import ActionRecorder
+from AutomationRunner import AutomationRunner
 from KeyActions import KeyActions
 from KeyID import KeyID
 from Logger import Logger
@@ -26,7 +27,10 @@ if user_input == "1":
 
 # 2. Run Action
 elif user_input == "2":
-    pass
+    automation_runner = AutomationRunner()
+
+    # run automation once
+    automation_runner.run_automation(123, False)
 
 # 3. Debug Record Action
 elif user_input == "3":

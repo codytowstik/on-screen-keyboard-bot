@@ -21,3 +21,13 @@
 - [ ] 
 - [ ] 
 - [ ] 
+
+# Code
+
+- [ ] Make KeyActions have staticmethods
+- [ ] Add class for maple action on how long to hold an action for
+- [ ] Key Action enum for things like TAP, HOLD
+
+# Next
+Run the program with "2" Run Action and see
+if the correct inputs are run via Notepad

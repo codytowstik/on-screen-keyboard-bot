@@ -1,3 +1,4 @@
+from KeyActions import KeyActions
 from Typings import MapleBuffTimer
 from automations.hand.HandAutomation123 import HandAutomation123
 from typing import List
@@ -14,12 +15,14 @@ class AutomationRunner:
     hand tailored automation (./automations/hand).
     """
 
+    key_actions = KeyActions()
+
     def __init__(self):
         # number of ticks that have passed
         self.automation_tick_count = 0
 
         # the loaded automation sequence
-        self.loaded_automation: List[MapleAction] = []
+        self.loaded_automation_sequence: List[MapleAction] = []
 
         # track when buffs started
         self.buff_timers: MapleBuffTimer = {}
@@ -51,11 +54,17 @@ class AutomationRunner:
         # TODO load the automation dynamically based on automation_id
         hand_automation = HandAutomation123()
 
-        self.loaded_automation = hand_automation.get_automation_sequence()
+        self.loaded_automation_sequence = hand_automation.get_automation_sequence()
 
     def _tick(self):
-        self.automation_tick_count += 1
         # TODO execute the automation step at the self.loaded_automation index of self_automation_tick_count
+        current_action = self.loaded_automation_sequence[self.automation_tick_count]
+
+        current_action_key = current_action.value
+
+        self.key_actions.tap(current_action_key)
+
+        self.automation_tick_count += 1
 
     def _check_if_paused(self) -> bool:
         """

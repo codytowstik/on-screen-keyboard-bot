@@ -1,3 +1,5 @@
+from enum import Enum
 
-class MapleAction:
+
+class MapleAction(Enum):
     pass
