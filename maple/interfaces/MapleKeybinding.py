@@ -1,0 +1,3 @@
+
+class MapleKeybinding:
+    pass

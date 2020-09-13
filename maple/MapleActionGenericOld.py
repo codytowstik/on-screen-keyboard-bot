@@ -1,7 +1,7 @@
 from maple.interfaces.MapleAction import MapleAction
 
 
-class MapleActionGeneric(MapleAction):
+class MapleActionGenericOld(MapleAction):
     """
     Actions that are non-class specific that can be done within the Maplestory client.
     """

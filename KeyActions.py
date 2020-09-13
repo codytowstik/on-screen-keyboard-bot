@@ -20,15 +20,16 @@ class KeyActions:
     def pressAndHold(self, key_name: KeyID, hold_length_seconds: float):
         key_location = self._loaded_keys.getKeyLocation(key_name.value)
 
-        self.maple_logger.debug("Found key ({0}) at location {1}, pressing for {2} seconds.")
+        self.maple_logger.debug(
+            "Found key ({0}) at location {1}, pressing for {2} seconds.",
+            key_name,
+            key_location)
 
         pyautogui.mouseDown(key_location)
         time.sleep(hold_length_seconds)
         pyautogui.mouseUp()
 
     def tap(self, key_name: KeyID):
-        self.maple_logger.debug("Found key ({0}) at location {1}, tapping.")
-
         self.pressAndHold(key_name, 0)
 
     def tapSequence(self, *key_names: [KeyID]):
