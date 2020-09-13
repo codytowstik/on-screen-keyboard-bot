@@ -23,7 +23,6 @@ class KeyID(Enum):
 
     ALT = "alt"
     CTRL = "ctrl"
-    END = "end"
     ENTER = "enter"
     TAB = "tab"
     TILDE = "tilde"
@@ -38,3 +37,6 @@ class KeyID(Enum):
 
     PAGE_UP = "pup"
     PAGE_DOWN = "pdn"
+    HOME = "home"
+    END = "end"  # TODO: add screenshot of home
+

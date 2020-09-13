@@ -1,0 +1,3 @@
+
+class MapleAction:
+    pass

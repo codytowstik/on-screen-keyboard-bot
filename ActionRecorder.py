@@ -39,7 +39,7 @@ class ActionRecorder:
 
         previous_input = None
 
-        while(True):
+        while True:
             current_input = self._check_current_input()
 
             # if stop recording button is pressed, dump action sequence to file

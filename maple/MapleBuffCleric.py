@@ -1,6 +1,7 @@
 from enum import Enum
 
-class MapleBuffsCleric(Enum):
+
+class MapleBuffCleric(Enum):
     """
     Enumeration of all cleric buffs. The value is the duration in seconds.
     """

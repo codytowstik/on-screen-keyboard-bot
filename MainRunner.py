@@ -17,18 +17,22 @@ user_input = input("Which action should be taken? 1: Record Action, 2: Run Actio
 
 maple_logger.info("Running action {0}", user_input)
 
+# 1. Record action
 if user_input == "1":
     automation_tag = input("Choose an automation tag \n")
     action_recorder = ActionRecorder(automation_tag)
 
     action_recorder.record_action_sequence()
 
+# 2. Run Action
 elif user_input == "2":
     pass
 
+# 3. Debug Record Action
 elif user_input == "3":
     pass
 
+# 4. Debug Run Action
 else:
     maple_logger.info(". . . . . . 2 seconds")
     time.sleep(2)

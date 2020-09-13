@@ -1,7 +1,9 @@
 import datetime
 
+from maple.interfaces.MapleAction import MapleAction
 
-class MapleClericActions:
+
+class MapleActionCleric(MapleAction):
     """
     Actions specific to the cleric class path, like specific abilities.
     """
