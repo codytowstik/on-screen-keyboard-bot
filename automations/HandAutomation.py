@@ -22,3 +22,6 @@ class HandAutomation(ABC):
     @abstractmethod
     def _load(self):
         pass
+
+    def get_automation_sequence(self) -> List[MapleAction]:
+        return self.automation_sequence

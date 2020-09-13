@@ -6,6 +6,7 @@ from maple.MapleActionGeneral import MapleActionGeneral
 class HandAutomation123(HandAutomation):
     def __init__(self):
         super().__init__(123)
+        self._load()
 
     def _load(self):
         self._add(MapleActionCleric.HEAL)

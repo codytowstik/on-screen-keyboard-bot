@@ -1,5 +1,5 @@
 from Typings import MapleBuffTimer
-from maple.MapleClass import MapleClass
+from automations.hand.HandAutomation123 import HandAutomation123
 from typing import List
 
 from maple.interfaces.MapleAction import MapleAction
@@ -48,7 +48,10 @@ class AutomationRunner:
         """
         Load an automation based on the automation_id.
         """
-        pass
+        # TODO load the automation dynamically based on automation_id
+        hand_automation = HandAutomation123()
+
+        self.loaded_automation = hand_automation.get_automation_sequence()
 
     def _tick(self):
         self.automation_tick_count += 1
