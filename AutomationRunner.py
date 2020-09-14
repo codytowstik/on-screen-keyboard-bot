@@ -6,8 +6,9 @@ from KeyActions import KeyActions
 from KeyID import KeyID
 from Logger import Logger
 from Typings import MapleBuffTimer
+from UserInputReader import UserInputReader
 from automations.hand.HandAutomation123 import HandAutomation123
-from typing import List
+from typing import List, Iterable, Iterator
 
 from maple.interfaces.MapleAction import MapleAction
 
@@ -25,7 +26,13 @@ class AutomationRunner:
     key_actions = KeyActions()
 
     # the minimum amount of time to wait between each tick
-    tick_time_buffer_seconds_min: float = 0.123
+    TICK_TIME_BUFFER_SECONDS_MIN: float = 0.123
+
+    # the key to listen for to pause the animation
+    PAUSE_KEY = "p"
+
+    # the interval that nothing but PAUSE_KEY + space needs to be pressed within
+    PAUSE_KEY_COMBO_TIMEOUT: float = 0.1
 
     def __init__(self):
         # number of ticks that have passed
@@ -39,6 +46,14 @@ class AutomationRunner:
 
         # if automation is paused
         self.paused = False
+
+        # create listener for pausing automation
+        UserInputReader.listen_for_key(self.PAUSE_KEY, self._toggle_pause_callback, self.PAUSE_KEY_COMBO_TIMEOUT)
+
+    def _toggle_pause_callback(self):
+        self.maple_logger.info("Toggling pause for automation. Paused = {0}", not self.paused)
+
+        self.paused = not self.paused
 
     def run_automation(self, automation_id: int, loop=True, loop_count=None) -> None:
         """
@@ -68,24 +83,51 @@ class AutomationRunner:
                 self.maple_logger.info("Automation finished, ran for {0} seconds.", automation_run_time_seconds)
                 break
 
-            elif loop_count:
-                loop_count -= 1
-                self._run_next_automation_action()
+            else:
+                loop_count = loop_count - 1 if loop_count else loop_count
+                self._run_next_automation_sequence()
 
-    def _run_next_automation_action(self):
+    def _run_next_automation_sequence(self) -> None:
+        """
+        Run the next loop of the loaded automation sequence
+        .. only running the subsequent step if automation is not paused
+        """
         sequence_iterator = iter(self.loaded_automation_sequence)
 
-        while action := next(sequence_iterator, None):
-            current_action_key_id: KeyID = action.value
+        while True:
+            # sleep for a bit if we are paused to save resources
+            if self.paused:
+                time.sleep(0.1)
 
-            if not self._is_paused():
-                # sleep for a random amount of time between each tick
-                time.sleep(self._get_tick_random_time_buffer())
+            else:
+                sequence_finished = self._run_next_automation_action(sequence_iterator)
 
-                self._tick(current_action_key_id)
+                if sequence_finished:
+                    break
+
+    def _run_next_automation_action(self, sequence_iterator: Iterator) -> bool:
+        """
+        Run the next action in the automation sequence.
+
+        :param sequence_iterator: the automation sequence iterator
+        :return: True if we have exhausted the sequence iterator
+        """
+        action = next(sequence_iterator, None)
+
+        if not action:
+            return True
+
+        current_action_key_id: KeyID = action.value
+
+        # sleep for a random amount of time between each tick
+        time.sleep(self._get_tick_random_time_buffer())
+
+        self._tick(current_action_key_id)
+
+        return False
 
     def _get_tick_random_time_buffer(self):
-        buffer_time = self.tick_time_buffer_seconds_min + random.uniform(0, 1)
+        buffer_time = self.TICK_TIME_BUFFER_SECONDS_MIN + random.uniform(0, 1)
 
         self.maple_logger.debug("Sleeping for {0} seconds.", buffer_time)
 
@@ -127,7 +169,7 @@ class AutomationRunner:
         """
         Check if the user is currently inputting the key to toggle pause.
         """
-        return False
+        return UserInputReader.get_user_input_blocking() == "p"
 
     def _get_expired_buffs(self) -> List:
         pass

@@ -24,7 +24,7 @@
 
 # Code
 
-- [ ] Read user input to check for pause or stop
+- [x] Read user input to check for pause or stop
 - [ ] Dynamically load automation file
 - [x] Buffer timer in between each tick, randomly adding a certain amount
 - [ ] Add class for maple action on how long to hold an action for
@@ -32,7 +32,7 @@
 - [ ] Key Action enum for things like TAP, HOLD
 - [ ] Config file to read buffer timer in between each click
         that is closed on pause so you can update it without restarting (for testing)
-- [ ] 
+- [x] Create a package lock file
 - [ ] 
 
 # Next
