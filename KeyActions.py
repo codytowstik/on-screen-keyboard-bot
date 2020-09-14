@@ -22,8 +22,9 @@ class KeyActions:
 
         self.maple_logger.debug(
             "Found key ({0}) at location {1}, pressing for {2} seconds.",
-            key_name,
-            key_location)
+            key_name.value,
+            key_location,
+            hold_length_seconds)
 
         pyautogui.mouseDown(key_location)
         time.sleep(hold_length_seconds)

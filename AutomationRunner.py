@@ -1,4 +1,6 @@
 from KeyActions import KeyActions
+from KeyID import KeyID
+from Logger import Logger
 from Typings import MapleBuffTimer
 from automations.hand.HandAutomation123 import HandAutomation123
 from typing import List
@@ -14,6 +16,8 @@ class AutomationRunner:
     This class can run an automation based off of a recording (from ./automations/recordings) or from a
     hand tailored automation (./automations/hand).
     """
+
+    maple_logger = Logger()
 
     key_actions = KeyActions()
 
@@ -40,9 +44,19 @@ class AutomationRunner:
         """
         self._load_automation(automation_id)
 
+        self.maple_logger.info(
+            "Starting automation with ID {0}, loop = {1}",
+            automation_id,
+            loop)
+
         while True:
-            if not self._check_if_paused():
-                self._tick()
+            sequence_iterator = iter(self.loaded_automation_sequence)
+
+            while action := next(sequence_iterator, None):
+                current_action_key_id = action.value
+
+                if not self._is_paused():
+                    self._tick(current_action_key_id)
 
             if not loop:
                 break
@@ -51,22 +65,21 @@ class AutomationRunner:
         """
         Load an automation based on the automation_id.
         """
+        self.maple_logger.info("Loading automation with ID {0}.", automation_id)
+
         # TODO load the automation dynamically based on automation_id
         hand_automation = HandAutomation123()
 
         self.loaded_automation_sequence = hand_automation.get_automation_sequence()
 
-    def _tick(self):
-        # TODO execute the automation step at the self.loaded_automation index of self_automation_tick_count
-        current_action = self.loaded_automation_sequence[self.automation_tick_count]
+        self.maple_logger.info("Loaded automation with {0} steps.", len(self.loaded_automation_sequence))
 
-        current_action_key = current_action.value
-
-        self.key_actions.tap(current_action_key)
+    def _tick(self, current_action_key_id: KeyID) -> None:
+        self.key_actions.tap(current_action_key_id)
 
         self.automation_tick_count += 1
 
-    def _check_if_paused(self) -> bool:
+    def _is_paused(self) -> bool:
         """
         Check if there is currently a user input to toggle pause, toggle paused if so
         .. then check if the automation is currently paused.
@@ -84,7 +97,7 @@ class AutomationRunner:
         """
         Check if the user is currently inputting the key to toggle pause.
         """
-        pass
+        return False
 
     def _get_expired_buffs(self) -> List:
         pass

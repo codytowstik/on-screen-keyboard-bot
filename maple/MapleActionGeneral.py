@@ -4,7 +4,7 @@ from KeyID import KeyID
 from maple.interfaces.MapleAction import MapleAction
 
 
-class MapleActionGeneral(Enum, MapleAction):
+class MapleActionGeneral(MapleAction):
     MOVE_LEFT = KeyID.LEFT
     MOVE_RIGHT = KeyID.RIGHT
     MOVE_DOWN = KeyID.DOWN

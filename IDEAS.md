@@ -8,3 +8,5 @@
 
 
     pip install opencv-python
+    
+- only works on 1920 x 1080 until I had higher res pictures

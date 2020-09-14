@@ -14,7 +14,8 @@ maple_logger.info("Please ensure this program is being 'Run as administrator...'
 
 time.sleep(1)
 
-user_input = input("Which action should be taken? 1: Record Action, 2: Run Action, 3: Debug Record Action, 4: Debug Run Action\n")
+# user_input = input("Which action should be taken? 1: Record Action, 2: Run Action, 3: Debug Record Action, 4: Debug Run Action\n")
+user_input = "2"
 
 maple_logger.info("Running action {0}", user_input)
 
@@ -27,6 +28,7 @@ if user_input == "1":
 
 # 2. Run Action
 elif user_input == "2":
+    time.sleep(3)
     automation_runner = AutomationRunner()
 
     # run automation once

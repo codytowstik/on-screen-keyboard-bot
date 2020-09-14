@@ -1,8 +1,9 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import List
 
 from maple.interfaces.MapleAction import MapleAction
 from Logger import Logger
+
 
 class HandAutomation(ABC):
     maple_logger = Logger()
@@ -17,7 +18,7 @@ class HandAutomation(ABC):
             action.name,
             action.value)
 
-        self.automation_sequence.append(action.value)
+        self.automation_sequence.append(action)
 
     @abstractmethod
     def _load(self):
