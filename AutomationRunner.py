@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from KeyActions import KeyActions
 from KeyID import KeyID
 from Logger import Logger
@@ -16,7 +18,6 @@ class AutomationRunner:
     This class can run an automation based off of a recording (from ./automations/recordings) or from a
     hand tailored automation (./automations/hand).
     """
-
     maple_logger = Logger()
 
     key_actions = KeyActions()
@@ -34,32 +35,46 @@ class AutomationRunner:
         # if automation is paused
         self.paused = False
 
-    def run_automation(self, automation_id: int, loop=True) -> None:
+    def run_automation(self, automation_id: int, loop=True, loop_count=None) -> None:
         """
-        Run the automation with the given id once or in a loop.
+        Run the automation with the given id once or in a loop,
+        looping the optionally specified number of times, otherwise forever.
 
         :param automation_id: the automation id
         :param loop: true if automation should be looped
-        :return:
+        :param loop_count: the number of times to loop, loop forever if not set
         """
         self._load_automation(automation_id)
 
         self.maple_logger.info(
-            "Starting automation with ID {0}, loop = {1}",
+            "Starting automation with ID {0}, loop = {1}, loop_count = {2}",
             automation_id,
-            loop)
+            loop,
+            loop_count)
+
+        automation_start_time = datetime.now()
 
         while True:
-            sequence_iterator = iter(self.loaded_automation_sequence)
+            # if we are not looping, or if loop_count is specified and there are none remaining
+            if not loop or (loop_count is not None and loop_count == 0):
+                automation_stop_time = datetime.now()
+                automation_run_time_seconds = (automation_stop_time - automation_start_time).total_seconds()
 
-            while action := next(sequence_iterator, None):
-                current_action_key_id = action.value
-
-                if not self._is_paused():
-                    self._tick(current_action_key_id)
-
-            if not loop:
+                self.maple_logger.info("Automation finished, ran for {0} seconds.", automation_run_time_seconds)
                 break
+
+            elif loop_count:
+                loop_count -= 1
+                self._run_next_automation_action()
+
+    def _run_next_automation_action(self):
+        sequence_iterator = iter(self.loaded_automation_sequence)
+
+        while action := next(sequence_iterator, None):
+            current_action_key_id: KeyID = action.value
+
+            if not self._is_paused():
+                self._tick(current_action_key_id)
 
     def _load_automation(self, automation_id: int) -> None:
         """
@@ -81,7 +96,7 @@ class AutomationRunner:
 
     def _is_paused(self) -> bool:
         """
-        Check if there is currently a user input to toggle pause, toggle paused if so
+        Check if there is currently a user input to toggle pause, if so toggle paused
         .. then check if the automation is currently paused.
 
         :return: true if paused

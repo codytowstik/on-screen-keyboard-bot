@@ -10,6 +10,8 @@ class HandAutomation(ABC):
 
     def __init__(self, automation_id: int):
         self.automation_id = automation_id
+
+        # the sequence of actions to be executed during automation
         self.automation_sequence: List[MapleAction] = []
 
     def _add(self, action: MapleAction) -> None:

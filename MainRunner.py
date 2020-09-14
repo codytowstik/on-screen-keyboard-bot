@@ -32,7 +32,7 @@ elif user_input == "2":
     automation_runner = AutomationRunner()
 
     # run automation once
-    automation_runner.run_automation(123, False)
+    automation_runner.run_automation(123, True, 5)
 
 # 3. Debug Record Action
 elif user_input == "3":

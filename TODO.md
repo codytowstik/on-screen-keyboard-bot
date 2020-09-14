@@ -24,9 +24,16 @@
 
 # Code
 
-- [ ] Make KeyActions have staticmethods
+- [ ] Read user input to check for pause or stop
+- [ ] Dynamically load automation file
+- [ ] Buffer timer in between each tick, randomly adding a certain amount
 - [ ] Add class for maple action on how long to hold an action for
+- [ ] Make KeyActions have staticmethods
 - [ ] Key Action enum for things like TAP, HOLD
+- [ ] Config file to read buffer timer in between each click
+        that is closed on pause so you can update it without restarting (for testing)
+- [ ] 
+- [ ] 
 
 # Next
 Run the program with "2" Run Action and see
