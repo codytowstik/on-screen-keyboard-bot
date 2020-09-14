@@ -44,7 +44,10 @@ class KeyLocationLoader:
         self.keyboard_region = pyautogui.locateOnScreen(keyboard_file_path, confidence=0.9)
 
         if self.keyboard_region is None:
-            self.maple_logger.debug("Unable to find OSK keyboard. Ensure the OSK window is at the smallest size.")
+            self.maple_logger.warning(
+                "Unable to find OSK keyboard. Ensure the OSK window is "
+                "at the smallest size and screen resolution is at 1920x1080.")
+
             raise Exception("Unable to find OSK.")
         else:
             self.maple_logger.debug("Found keyboard at region: {0}", self.keyboard_region)

@@ -1,4 +1,6 @@
 from datetime import datetime
+import random
+import time
 
 from KeyActions import KeyActions
 from KeyID import KeyID
@@ -21,6 +23,9 @@ class AutomationRunner:
     maple_logger = Logger()
 
     key_actions = KeyActions()
+
+    # the minimum amount of time to wait between each tick
+    tick_time_buffer_seconds_min: float = 0.123
 
     def __init__(self):
         # number of ticks that have passed
@@ -74,7 +79,17 @@ class AutomationRunner:
             current_action_key_id: KeyID = action.value
 
             if not self._is_paused():
+                # sleep for a random amount of time between each tick
+                time.sleep(self._get_tick_random_time_buffer())
+
                 self._tick(current_action_key_id)
+
+    def _get_tick_random_time_buffer(self):
+        buffer_time = self.tick_time_buffer_seconds_min + random.uniform(0, 1)
+
+        self.maple_logger.debug("Sleeping for {0} seconds.", buffer_time)
+
+        return buffer_time
 
     def _load_automation(self, automation_id: int) -> None:
         """
