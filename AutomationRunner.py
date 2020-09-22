@@ -7,6 +7,7 @@ from KeyID import KeyID
 from Logger import Logger
 from Typings import MapleBuffTimer
 from UserInputReader import UserInputReader
+from automations.AutomationTick import AutomationTick
 from automations.hand.HandAutomation123 import HandAutomation123
 from typing import List, Iterator
 
@@ -41,7 +42,7 @@ class AutomationRunner:
         self.automation_tick_count = 0
 
         # the loaded automation sequence
-        self.loaded_automation_sequence: List[MapleAction] = []
+        self.loaded_automation_sequence: List[AutomationTick] = []
 
         # track when buffs started
         self.buff_timers: MapleBuffTimer = {}
@@ -105,6 +106,19 @@ class AutomationRunner:
                 loop_count = loop_count - 1 if loop_count else loop_count
                 self._run_next_automation_sequence()
 
+    def _load_automation(self, automation_id: int) -> None:
+        """
+        Load an automation based on the automation_id.
+        """
+        self.maple_logger.info("Loading automation with ID {0}.", automation_id)
+
+        # TODO load the automation dynamically based on automation_id
+        hand_automation = HandAutomation123()
+
+        self.loaded_automation_sequence = hand_automation.get_automation_sequence()
+
+        self.maple_logger.info("Loaded automation with {0} steps.", len(self.loaded_automation_sequence))
+
     def _run_next_automation_sequence(self) -> None:
         """
         Run the next loop of the loaded automation sequence
@@ -123,24 +137,26 @@ class AutomationRunner:
                 if sequence_finished:
                     break
 
-    def _run_next_automation_action(self, sequence_iterator: Iterator) -> bool:
+    def _run_next_automation_action(self, sequence_iterator: Iterator[AutomationTick]) -> bool:
         """
         Run the next action in the automation sequence.
 
         :param sequence_iterator: the automation sequence iterator
         :return: True if we have exhausted the sequence iterator
         """
-        action = next(sequence_iterator, None)
+        automation_tick = next(sequence_iterator, None)
 
-        if not action:
+        if not automation_tick:
             return True
+
+        action = automation_tick.get_action()
 
         current_action_key_id: KeyID = action.value
 
         # sleep for a random amount of time between each tick
         time.sleep(self._get_tick_random_time_buffer())
 
-        self._tick(current_action_key_id)
+        self._tick(current_action_key_id, automation_tick.get_duration())
 
         return False
 
@@ -151,21 +167,8 @@ class AutomationRunner:
 
         return buffer_time
 
-    def _load_automation(self, automation_id: int) -> None:
-        """
-        Load an automation based on the automation_id.
-        """
-        self.maple_logger.info("Loading automation with ID {0}.", automation_id)
-
-        # TODO load the automation dynamically based on automation_id
-        hand_automation = HandAutomation123()
-
-        self.loaded_automation_sequence = hand_automation.get_automation_sequence()
-
-        self.maple_logger.info("Loaded automation with {0} steps.", len(self.loaded_automation_sequence))
-
-    def _tick(self, current_action_key_id: KeyID) -> None:
-        self.key_actions.tap(current_action_key_id)
+    def _tick(self, current_action_key_id: KeyID, duration: float) -> None:
+        self.key_actions.pressAndHold(current_action_key_id, duration)
 
         self.automation_tick_count += 1
 

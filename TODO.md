@@ -27,7 +27,7 @@
 - [x] Read user input to check for pause or stop
 - [ ] Dynamically load automation file
 - [x] Buffer timer in between each tick, randomly adding a certain amount
-- [ ] Add class for maple action on how long to hold an action for
+- [x] Add class for maple action on how long to hold an action for
 - [ ] Make KeyActions have staticmethods
 - [ ] Key Action enum for things like TAP, HOLD
 - [ ] Config file to read buffer timer in between each click
