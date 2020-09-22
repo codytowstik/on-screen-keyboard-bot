@@ -1,4 +1,3 @@
-import time
 from typing import Callable
 
 import keyboard
@@ -27,6 +26,7 @@ class UserInputReader:
 
 		:param key: the key to listen for (can be a sequence of characters)
 		:param callback: the callback to invoke on key combo press
+		:param timeout: the timespan you have to press the keys + space contiguously
 		"""
 		# key + space must be pressed within 0.1 second interval
 		keyboard.add_word_listener(key, callback, timeout=timeout)
@@ -37,3 +37,18 @@ class UserInputReader:
 		Print that a key is pressed, for use as a test callback for listen_for_key.
 		"""
 		print("Pressed")
+
+	@staticmethod
+	def on_press_key(key, callback):
+		"""
+		Invoke callback every time key is pressed.
+		"""
+		keyboard.on_press_key(key, callback)
+
+	@staticmethod
+	def wait_for_key(key):
+		"""
+		Blocks program execution until the specified key is pressed.
+		:return:
+		"""
+		keyboard.wait(key)

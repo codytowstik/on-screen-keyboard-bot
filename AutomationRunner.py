@@ -8,7 +8,7 @@ from Logger import Logger
 from Typings import MapleBuffTimer
 from UserInputReader import UserInputReader
 from automations.hand.HandAutomation123 import HandAutomation123
-from typing import List, Iterable, Iterator
+from typing import List, Iterator
 
 from maple.interfaces.MapleAction import MapleAction
 
@@ -30,6 +30,8 @@ class AutomationRunner:
 
     # the key to listen for to pause the animation
     PAUSE_KEY = "p"
+    START_KEY = "9"
+    EXIT_KEY = "0"
 
     # the interval that nothing but PAUSE_KEY + space needs to be pressed within
     PAUSE_KEY_COMBO_TIMEOUT: float = 0.1
@@ -47,13 +49,25 @@ class AutomationRunner:
         # if automation is paused
         self.paused = False
 
-        # create listener for pausing automation
-        UserInputReader.listen_for_key(self.PAUSE_KEY, self._toggle_pause_callback, self.PAUSE_KEY_COMBO_TIMEOUT)
+        # if automation set to exit
+        self.exited = False
 
-    def _toggle_pause_callback(self):
+        # create listeners for pausing and exiting automation
+        UserInputReader.on_press_key(self.PAUSE_KEY, self._toggle_pause_callback)
+
+        UserInputReader.on_press_key(self.EXIT_KEY, self._exit_automation)
+
+    def _toggle_pause_callback(self, event):
         self.maple_logger.info("Toggling pause for automation. Paused = {0}", not self.paused)
 
         self.paused = not self.paused
+
+    def _exit_automation(self, event):
+        self.maple_logger.info("Exiting automation after current loop finishes.")
+        self.exited = True
+
+    def _wait_for_automation_start_key(self):
+        UserInputReader.wait_for_key(self.START_KEY)
 
     def run_automation(self, automation_id: int, loop=True, loop_count=None) -> None:
         """
@@ -66,6 +80,10 @@ class AutomationRunner:
         """
         self._load_automation(automation_id)
 
+        self.maple_logger.info("Waiting for start key ({0}) to be pressed.", self.START_KEY)
+
+        self._wait_for_automation_start_key()
+
         self.maple_logger.info(
             "Starting automation with ID {0}, loop = {1}, loop_count = {2}",
             automation_id,
@@ -76,7 +94,7 @@ class AutomationRunner:
 
         while True:
             # if we are not looping, or if loop_count is specified and there are none remaining
-            if not loop or (loop_count is not None and loop_count == 0):
+            if self.exited or not loop or (loop_count is not None and loop_count == 0):
                 automation_stop_time = datetime.now()
                 automation_run_time_seconds = (automation_stop_time - automation_start_time).total_seconds()
 
@@ -126,7 +144,7 @@ class AutomationRunner:
 
         return False
 
-    def _get_tick_random_time_buffer(self):
+    def _get_tick_random_time_buffer(self) -> float:
         buffer_time = self.TICK_TIME_BUFFER_SECONDS_MIN + random.uniform(0, 1)
 
         self.maple_logger.debug("Sleeping for {0} seconds.", buffer_time)
@@ -150,26 +168,6 @@ class AutomationRunner:
         self.key_actions.tap(current_action_key_id)
 
         self.automation_tick_count += 1
-
-    def _is_paused(self) -> bool:
-        """
-        Check if there is currently a user input to toggle pause, if so toggle paused
-        .. then check if the automation is currently paused.
-
-        :return: true if paused
-        """
-        toggle_pause = self._check_for_toggle_pause_input()
-
-        if toggle_pause:
-            self.paused = not self.paused
-
-        return self.paused
-
-    def _check_for_toggle_pause_input(self) -> bool:
-        """
-        Check if the user is currently inputting the key to toggle pause.
-        """
-        return UserInputReader.get_user_input_blocking() == "p"
 
     def _get_expired_buffs(self) -> List:
         pass
