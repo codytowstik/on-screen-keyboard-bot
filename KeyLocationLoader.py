@@ -4,6 +4,7 @@ import pathlib
 
 import pyautogui
 
+from ConfigLoader import ConfigLoader
 from Typings import KeyLocation, ScreenCoordinate
 from Logger import Logger
 
@@ -14,8 +15,8 @@ class KeyLocationLoader:
     specified in KEY_IMAGE_BASE_PATH. Looks for keys in the region of the OSK by first looking for
     a match for OSK_FILE_NAME.
     """
-    KEY_IMAGE_BASE_PATH = "onscreenkeyboard"
-    OSK_FILE_NAME = "onscreenkeyboard.png"
+    KEY_IMAGE_BASE_PATH = ConfigLoader.get('key.image.base.path')
+    OSK_FILE_NAME = ConfigLoader.get('osk.file.name')
 
     script_path = pathlib.Path(__file__).parent.absolute()
     key_image_full_path = os.path.join(script_path, KEY_IMAGE_BASE_PATH)
